@@ -1,6 +1,6 @@
 <?php
 
-require '../config.php';
+require '../includes/config.php';
 
 // Set the response array
 $response = ['success' => false, 'message' => 'An error occurred. Please try again.'];
@@ -8,9 +8,9 @@ $response = ['success' => false, 'message' => 'An error occurred. Please try aga
 // Check if the request is a POST request and the required fields are set
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username']) && isset($_POST['email']) && isset($_POST['password'])) {
     // Sanitize input
-    $username = filter_input(INPUT_POST, 'username', FILTER_SANITIZE_STRING);
+    $username = clean_input($_POST['username']);
     $email = filter_input(INPUT_POST, 'email', FILTER_SANITIZE_EMAIL);
-    $password = filter_input(INPUT_POST, 'password', FILTER_SANITIZE_STRING);
+    $password = clean_input($_POST['password']);
 
     // Validate input
     if (empty($username) || empty($email) || empty($password)) {
@@ -60,7 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['username']) && isset(
         // Send email
         require '../vendor/autoload.php';
 
-        $mail = sendEmail($email, $username);
+        $mail = send_email($email, $username);
 
         if ($mail->send()) {
             $response['success'] = true;

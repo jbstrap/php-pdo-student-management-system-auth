@@ -2,9 +2,9 @@
 
 use PHPMailer\PHPMailer\PHPMailer;
 
-require __DIR__ . '/vendor/autoload.php';
+require __DIR__ . '../../vendor/autoload.php';
 
-$dotenv = Dotenv\Dotenv::createImmutable(__DIR__);
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '../../');
 $dotenv->load();
 
 // Database configuration
@@ -33,7 +33,7 @@ function connect_db()
     }
 }
 
-function sendEmail($email, $username): PHPMailer
+function send_email($email, $username): PHPMailer
 {
     global $SMTP_HOST, $SMTP_PORT, $SMTP_USERNAME, $SMTP_PASSWORD;
     // Instantiation and passing `true` enables exceptions
@@ -57,10 +57,25 @@ function sendEmail($email, $username): PHPMailer
     $mail->Subject = 'Welcome to Edulearn';
 
     $template = file_get_contents(__DIR__ . '/email-template.html');
-    $template = str_replace('{{username}}', htmlspecialchars($username), $template);
+    $template = str_replace('[rooturl]', $_ENV['APP_URL_ROOT'], $template);
+    $template = str_replace('[username]', htmlspecialchars($username), $template);
 
     $mail->msgHTML($template, __DIR__);
     $mail->AltBody = 'Thank you for registering at EduLearn.';
 
     return $mail;
+}
+
+function clean_input($data)
+{
+    // Stripping HTML and PHP tags from the input data
+    $data = strip_tags($data);
+    // Converting special characters to HTML entities to prevent XSS attacks
+    $data = htmlspecialchars($data);
+    // Removing backslashes from the input data to prevent SQL injection
+    $data = stripslashes($data);
+    // Removing leading and trailing whitespace from the input data
+    $data = trim($data);
+    // Returning the sanitized input data
+    return $data;
 }
