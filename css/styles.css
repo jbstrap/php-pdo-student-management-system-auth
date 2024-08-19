@@ -156,7 +156,7 @@ button:disabled {
     color: #0056b3;
 }
 
-/* Spinner styling */
+/* Spinner overlay */
 .spinner-overlay {
     position: absolute;
     top: 0;
@@ -171,6 +171,14 @@ button:disabled {
     z-index: 10;
 }
 
+.spinner-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Spinner styling */
 .spinner {
     border: 4px solid rgba(0, 0, 0, 0.1);
     border-top: 4px solid #007bff;
@@ -178,6 +186,13 @@ button:disabled {
     width: 40px;
     height: 40px;
     animation: spin 1s linear infinite;
+}
+
+/* Spinner text styling */
+.spinner-text {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #555;
 }
 
 @keyframes spin {
